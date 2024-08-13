@@ -19,14 +19,15 @@ private:
 
     Data m_data;
 
+    bool legal_characters_in_tag_name(const QString& tag_name);
+    bool verify_tag_name(const QString& tag_name);
+    QString extract_tag_name(QString string);
+
 private slots:
 
     void on_create_tag_button_clicked();
     void on_edit_tag_button_clicked();
     void on_remove_tag_button_clicked();
-
-    void display_tags_list();
-    void display_files_list();
 
 public:
 
@@ -36,8 +37,7 @@ public:
 
 signals:
 
-    void signal_tags_data_modified();
-    void signal_files_data_modified();
+
 
 };
 
