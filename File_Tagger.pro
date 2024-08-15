@@ -10,11 +10,13 @@ CONFIG += c++20
 
 SOURCES += \
     data.cpp \
+    file.cpp \
     main.cpp \
     main_window.cpp
 
 HEADERS += \
     data.h \
+    file.h \
     main_window.h
 
 FORMS += \

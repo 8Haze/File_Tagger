@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1000</width>
     <height>600</height>
    </rect>
   </property>
@@ -47,7 +47,7 @@
          <item>
           <widget class="QPushButton" name="add_files_button">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose one or more files from your computer to add to the program's memory. &lt;/p&gt;&lt;p&gt;They can later be tagged however you want.&lt;/p&gt;&lt;p&gt;The program does not check for duplicate file paths.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose one or more files from your computer to add to the program's catalog. &lt;/p&gt;&lt;p&gt;They can later be tagged however you want.&lt;/p&gt;&lt;p&gt;The program does not check for duplicate file paths.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>Add Files</string>
@@ -110,7 +110,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="searching_layout">
          <item>
           <widget class="QLabel" name="label">
            <property name="toolTip">
@@ -124,7 +124,7 @@
          <item>
           <widget class="QLineEdit" name="search_line">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a list of tags that a file must have to be searched for, separating tags with spaces.&lt;/p&gt;&lt;p&gt;Precede a tag with a &amp;quot;-&amp;quot; to mark a tag that must now show up.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a list of tags that a file must have to be searched for, separating tags with spaces.&lt;/p&gt;&lt;p&gt;Precede a tag with a &amp;quot;-&amp;quot; to mark that it must not show up.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -138,6 +138,13 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QPushButton" name="search_reset_button">
+           <property name="text">
+            <string>Reset</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
@@ -145,8 +152,11 @@
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The list below contains the files and all the tags they're associated with.&lt;/p&gt;&lt;p&gt;Double-click on a file to open it with matching software on your computer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
+         <property name="frameShape">
+          <enum>QFrame::Shape::NoFrame</enum>
+         </property>
          <property name="text">
-          <string>File Path - List Of Tags</string>
+          <string>File Path --- List Of Tags</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -332,7 +342,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="remove_tag_button">
+           <widget class="QPushButton" name="delete_tag_button">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delete the currently selected (highlighted) tag.&lt;/p&gt;&lt;p&gt;It will also be removed from any files that currently include it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -431,7 +441,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1000</width>
      <height>21</height>
     </rect>
    </property>
