@@ -5,10 +5,12 @@
 // ================================================================
 
 File::File(const QString& path, QMap<QString, int>& tags_map) :
+    QObject(nullptr),
     m_path(path),
     m_tags_map(tags_map) {}
 
 File::File(File&& other) :
+    QObject(nullptr),
     m_path(std::move(other.m_path)),
     m_tags(std::move(other.m_tags)),
     m_tags_map(other.m_tags_map) {}
@@ -81,4 +83,30 @@ QString File::to_string() const
         result.chop(2);
 
     return result;
+}
+
+QVariant File::to_variant() const
+{
+    QVariantMap map;
+    QVariantList list;
+
+    map.insert("file_path", m_path);
+
+    for (const auto& tag : m_tags)
+        list.append(tag);
+
+    map.insert("tags", list);
+
+    return map;
+}
+
+void File::from_variant(const QVariant& variant)
+{
+    QVariantMap map = variant.toMap();
+    QVariantList list = map.value("tags").toList();
+
+    m_path = map.value("file_path").toString();
+
+    for (const auto& tag : list)
+        add_tag(tag.toString());
 }

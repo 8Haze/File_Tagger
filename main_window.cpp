@@ -1,11 +1,11 @@
 #include "main_window.h"
 #include "ui_main_window.h"
 
+#include <QUrl>
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
-
-#include <QDebug> // debug only
+#include <QDesktopServices>
 
 // ================================================================
 // | Main_Window Class - Constructors                             |
@@ -19,18 +19,65 @@ Main_Window::Main_Window(QWidget* parent) :
 
     setWindowTitle("File Tagger");
 
-    // load & init data
+    init_connections();
+    init_data();
+}
+
+// ================================================================
+// | Main_Window Class - Private                                  |
+// ================================================================
+
+void Main_Window::init_connections()
+{
+    connect(ui->create_tag_button, &QPushButton::clicked, this, &Main_Window::do_on_create_tag_button_clicked);
+    connect(ui->edit_tag_button, &QPushButton::clicked, this, &Main_Window::do_on_edit_tag_button_clicked);
+    connect(ui->delete_tag_button, &QPushButton::clicked, this, &Main_Window::do_on_delete_tag_button_clicked);
+    connect(ui->check_all_tags_button, &QPushButton::clicked, this, &Main_Window::do_on_check_all_tags_button);
+    connect(ui->uncheck_all_tags_button, &QPushButton::clicked, this, &Main_Window::do_on_uncheck_all_tags_button);
+
+    connect(ui->add_files_button, &QPushButton::clicked, this, &Main_Window::do_on_add_files_button_clicked);
+    connect(ui->add_tags_to_files_button, &QPushButton::clicked, this, &Main_Window::do_on_add_tags_to_files_button_clicked);
+    connect(ui->remove_tags_from_files_button, &QPushButton::clicked, this, &Main_Window::do_on_remove_tags_from_files_button_clicked);
+    connect(ui->delete_file_button, &QPushButton::clicked, this, &Main_Window::do_on_delete_file_button_clicked);
+    connect(ui->check_all_files_button, &QPushButton::clicked, this, &Main_Window::do_on_check_all_files_button);
+    connect(ui->uncheck_all_files_button, &QPushButton::clicked, this, &Main_Window::do_on_uncheck_all_files_button);
+
+    connect(ui->search_button, &QPushButton::clicked, this, &Main_Window::do_on_search_button_clicked);
+    connect(ui->search_reset_button, &QPushButton::clicked, this, &Main_Window::do_on_search_reset_button_clicked);
+
+    connect(ui->files_list, &QListWidget::doubleClicked, this, &Main_Window::do_on_files_list_double_clicked);
+
+    connect(ui->action_save, &QAction::triggered, this, &Main_Window::do_on_action_save_triggered);
+    connect(ui->action_exit, &QAction::triggered, this, &Main_Window::do_on_action_exit_triggered);
+}
+
+void Main_Window::init_data()
+{
+    if (!m_main_serializer.load(m_data, sm_save_file_name))
+        QMessageBox::critical(this, "Error", "Failed to load data. The destination file could not be opened.");
+
+    for (auto [tag_name, count] : m_data.get_tags().asKeyValueRange())
+        ui->tags_list->addItem(tag_to_ui_string(tag_name, count));
+
+    for (const auto& file : m_data.get_files())
+        ui->files_list->addItem(file.to_string());
 
     for (int a = 0; a < ui->tags_list->count(); ++a)
         ui->tags_list->item(a)->setCheckState(Qt::Unchecked);
 
     for (int a = 0; a < ui->files_list->count(); ++a)
         ui->files_list->item(a)->setCheckState(Qt::Unchecked);
+
+    m_data.mark_as_saved();
 }
 
-// ================================================================
-// | Main_Window Class - Private                                  |
-// ================================================================
+void Main_Window::save_data()
+{
+    if (!m_main_serializer.save(m_data, sm_save_file_name))
+        QMessageBox::critical(this, "Error", "Failed to save data. The destination file could not be opened.");
+
+    m_data.mark_as_saved();
+}
 
 bool Main_Window::legal_characters_in_tag_name(const QString& tag_name)
 {
@@ -39,7 +86,6 @@ bool Main_Window::legal_characters_in_tag_name(const QString& tag_name)
         return (character >= '0' && character <= '9') ||
                (character >= 'a' && character <= 'z') ||
                (character >= 'A' && character <= 'Z') ||
-               (character == '-') ||
                (character == '_');
     };
 
@@ -54,7 +100,7 @@ bool Main_Window::verify_tag_name(const QString& tag_name)
 {
     if (!legal_characters_in_tag_name(tag_name))
     {
-        QMessageBox::warning(this, "Unacceptable character", "At least one provided character is illegal. Acceptable characters: a-z A-Z 0-9 - _");
+        QMessageBox::warning(this, "Unacceptable character", "At least one provided character is illegal. Acceptable characters: a-z A-Z 0-9 _");
         return false;
     }
 
@@ -95,11 +141,19 @@ void Main_Window::refresh_ui_tags_list(bool checked_only)
         }
 }
 
+void Main_Window::reset_search_results()
+{
+    searcher.reset();
+
+    for (int a = 0; a < ui->files_list->count(); ++a)
+        ui->files_list->item(a)->setHidden(false);
+}
+
 // ================================================================
 // | Main_Window Class - Private Slots                            |
 // ================================================================
 
-void Main_Window::on_create_tag_button_clicked()
+void Main_Window::do_on_create_tag_button_clicked()
 {
     QString tag_name = QInputDialog::getText(this, "Create new tag", "Enter the name of the tag:");
 
@@ -112,7 +166,7 @@ void Main_Window::on_create_tag_button_clicked()
     ui->tags_list->item(ui->tags_list->count() - 1)->setCheckState(Qt::Unchecked);
 }
 
-void Main_Window::on_edit_tag_button_clicked()
+void Main_Window::do_on_edit_tag_button_clicked()
 {
     if (!ui->tags_list->currentItem())
         return;
@@ -139,7 +193,7 @@ void Main_Window::on_edit_tag_button_clicked()
         }
 }
 
-void Main_Window::on_delete_tag_button_clicked()
+void Main_Window::do_on_delete_tag_button_clicked()
 {
     if (!ui->tags_list->currentItem())
         return;
@@ -163,11 +217,25 @@ void Main_Window::on_delete_tag_button_clicked()
         }
 }
 
-void Main_Window::on_add_files_button_clicked()
+void Main_Window::do_on_check_all_tags_button()
+{
+    for (int a = 0; a < ui->tags_list->count(); ++a)
+        if (!ui->tags_list->item(a)->isHidden())
+            ui->tags_list->item(a)->setCheckState(Qt::Checked);
+}
+
+void Main_Window::do_on_uncheck_all_tags_button()
+{
+    for (int a = 0; a < ui->tags_list->count(); ++a)
+        if (!ui->tags_list->item(a)->isHidden())
+            ui->tags_list->item(a)->setCheckState(Qt::Unchecked);
+}
+
+void Main_Window::do_on_add_files_button_clicked()
 {
     auto file_paths = QFileDialog::getOpenFileNames(this, "Select one or more files to add to your catalog");
 
-    // call reset button because we want to un-hide all files
+    reset_search_results();
 
     for (const auto& file_path : file_paths)
     {
@@ -183,55 +251,9 @@ void Main_Window::on_add_files_button_clicked()
     }
 
     refresh_ui_tags_list(true);
-
-    // debug
-    for (const auto& file : m_data.get_files())
-        qDebug() << file.to_string();
-    qDebug() << "";
 }
 
-void Main_Window::on_add_tags_to_files_button_clicked()
-{
-    for (int a = 0; a < ui->files_list->count(); ++a)
-        if (ui->files_list->item(a)->checkState() == Qt::Checked)
-        {
-            for (int b = 0; b < ui->tags_list->count(); ++b)
-                if (!ui->files_list->item(a)->isHidden() && (ui->tags_list->item(b)->checkState() == Qt::Checked))
-                    m_data.get_files()[a].add_tag(extract_tag_name(ui->tags_list->item(b)->text()));
-
-            ui->files_list->item(a)->setText(m_data.get_files()[a].to_string());
-        }
-    qDebug() << "works";
-
-    refresh_ui_tags_list(true);
-
-    // debug
-    for (const auto& file : m_data.get_files())
-        qDebug() << file.to_string();
-    qDebug() << "";
-}
-
-void Main_Window::on_remove_tags_from_files_button_clicked()
-{
-    for (int a = 0; a < ui->files_list->count(); ++a)
-        if (ui->files_list->item(a)->checkState() == Qt::Checked)
-        {
-            for (int b = 0; b < ui->tags_list->count(); ++b)
-                if (!ui->files_list->item(a)->isHidden() && (ui->tags_list->item(b)->checkState() == Qt::Checked))
-                    m_data.get_files()[a].remove_tag(extract_tag_name(ui->tags_list->item(b)->text()));
-
-            ui->files_list->item(a)->setText(m_data.get_files()[a].to_string());
-        }
-
-    refresh_ui_tags_list(true);
-
-    // debug
-    for (const auto& file : m_data.get_files())
-        qDebug() << file.to_string();
-    qDebug() << "";
-}
-
-void Main_Window::on_delete_file_button_clicked()
+void Main_Window::do_on_delete_file_button_clicked()
 {
     if (!ui->files_list->currentItem() || ui->files_list->currentItem()->isHidden())
         return;
@@ -254,27 +276,124 @@ void Main_Window::on_delete_file_button_clicked()
     delete ui->files_list->takeItem(row);
 
     refresh_ui_tags_list(false);
-
-    // debug
-    for (const auto& file : files)
-        qDebug() << file.to_string();
-    qDebug() << "";
 }
 
-void Main_Window::on_search_button_clicked()
+void Main_Window::do_on_add_tags_to_files_button_clicked()
 {
-    // debug
-    ui->files_list->item(2)->setHidden(true);
-    ui->files_list->item(4)->setHidden(true);
-    ui->files_list->item(6)->setHidden(true);
-}
-
-void Main_Window::on_search_reset_button_clicked()
-{
-    ui->search_line->clear(); // not sure if we want this
-
     for (int a = 0; a < ui->files_list->count(); ++a)
-        ui->files_list->item(a)->setHidden(false);
+        if (ui->files_list->item(a)->checkState() == Qt::Checked)
+        {
+            for (int b = 0; b < ui->tags_list->count(); ++b)
+                if (!ui->files_list->item(a)->isHidden() && (ui->tags_list->item(b)->checkState() == Qt::Checked))
+                    m_data.get_files()[a].add_tag(extract_tag_name(ui->tags_list->item(b)->text()));
+
+            ui->files_list->item(a)->setText(m_data.get_files()[a].to_string());
+        }
+
+    refresh_ui_tags_list(true);
+}
+
+void Main_Window::do_on_remove_tags_from_files_button_clicked()
+{
+    for (int a = 0; a < ui->files_list->count(); ++a)
+        if (ui->files_list->item(a)->checkState() == Qt::Checked)
+        {
+            for (int b = 0; b < ui->tags_list->count(); ++b)
+                if (!ui->files_list->item(a)->isHidden() && (ui->tags_list->item(b)->checkState() == Qt::Checked))
+                    m_data.get_files()[a].remove_tag(extract_tag_name(ui->tags_list->item(b)->text()));
+
+            ui->files_list->item(a)->setText(m_data.get_files()[a].to_string());
+        }
+
+    refresh_ui_tags_list(true);
+}
+
+void Main_Window::do_on_check_all_files_button()
+{
+    for (int a = 0; a < ui->files_list->count(); ++a)
+        if (!ui->files_list->item(a)->isHidden())
+            ui->files_list->item(a)->setCheckState(Qt::Checked);
+}
+
+void Main_Window::do_on_uncheck_all_files_button()
+{
+    for (int a = 0; a < ui->files_list->count(); ++a)
+        if (!ui->files_list->item(a)->isHidden())
+            ui->files_list->item(a)->setCheckState(Qt::Unchecked);
+}
+
+void Main_Window::do_on_search_button_clicked()
+{
+    reset_search_results();
+
+    if (!searcher.parse(ui->search_line->text()))
+    {
+        QMessageBox::warning(this, "Parsing Error", "The search line input contains an error. Check it and try again.");
+        return;
+    }
+
+    auto to_hide = searcher.search(m_data.get_files());
+
+    for (const auto& index : to_hide)
+        ui->files_list->item(index)->setHidden(true);
+}
+
+void Main_Window::do_on_search_reset_button_clicked()
+{
+    ui->search_line->clear();
+
+    reset_search_results();
+}
+
+void Main_Window::do_on_files_list_double_clicked(const QModelIndex& index)
+{
+    if (index.row() < 0 || index.row() >= ui->files_list->count())
+        return;
+
+    if (!QDesktopServices::openUrl(QUrl("file:///" + m_data.get_files()[index.row()].get_path(), QUrl::TolerantMode)))
+        QMessageBox::critical(this, "File could not be opened", "The file could not be opened. If it does not exist anymore, it should be removed from the program.");
+}
+
+void Main_Window::do_on_action_save_triggered()
+{
+    save_data();
+}
+
+void Main_Window::do_on_action_exit_triggered()
+{
+    auto yes = QMessageBox::Yes;
+    auto no = QMessageBox::No;
+    auto cancel = QMessageBox::Cancel;
+
+    if (!m_data.is_saved())
+    {
+        auto answer = QMessageBox::question(this, "Unsaved data", "You have unsaved data. Save before exiting?", QMessageBox::StandardButtons(yes | no | cancel));
+
+        if (answer == QMessageBox::StandardButton::Yes)
+        {
+            save_data();
+            QMainWindow::close();
+        }
+        else if (answer == QMessageBox::StandardButton::No)
+            QMainWindow::close();
+    }
+    else
+        QMainWindow::close();
+}
+
+// ================================================================
+// | Main_Window Class - Protected                                |
+// ================================================================
+
+void Main_Window::closeEvent(QCloseEvent* event)
+{
+    if (m_data.is_saved())
+        event->accept();
+    else
+    {
+        do_on_action_exit_triggered();
+        event->ignore();
+    }
 }
 
 // ================================================================

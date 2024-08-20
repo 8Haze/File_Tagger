@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>600</height>
+    <width>1200</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,6 +15,314 @@
   </property>
   <widget class="QWidget" name="central_widget">
    <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QFrame" name="data_management_layout">
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="internal_data_management_layout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="files_management_layout">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>250</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Shape::Box</enum>
+         </property>
+         <property name="lineWidth">
+          <number>2</number>
+         </property>
+         <property name="midLineWidth">
+          <number>2</number>
+         </property>
+         <layout class="QVBoxLayout" name="internal_files_management_layout">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <property name="leftMargin">
+           <number>8</number>
+          </property>
+          <property name="topMargin">
+           <number>8</number>
+          </property>
+          <property name="rightMargin">
+           <number>8</number>
+          </property>
+          <property name="bottomMargin">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="files_management_label">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Managing Files</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="add_files_tags_checkbox">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When this checkbox is set, the files you select to add to your list will be automatically initialized with all the tags that are currently checked on the tags list.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LayoutDirection::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>Apply Checked Tags</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="add_files_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose one or more files from your computer to add to the program's catalog. &lt;/p&gt;&lt;p&gt;They can later be tagged however you want.&lt;/p&gt;&lt;p&gt;The program does not check for duplicate file paths.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Add Files</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="delete_file_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove the currently selected (highlighted) file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Delete Selected File</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="add_tags_to_files_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Apply all currently checked tags to all currently checked files.&lt;/p&gt;&lt;p&gt;Duplicate tags will be skipped automatically.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Apply Tags To Files</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="remove_tags_from_files_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove all currently checked tags from all currently checked files.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Remove Tags From Files</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="check_all_files_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check the box for every currently existing file.&lt;/p&gt;&lt;p&gt;Skips any files that are not currently visible (due to being filitered out by the search function).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Check All Files</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="uncheck_all_files_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Uncheck the box for every currently existing file.&lt;/p&gt;&lt;p&gt;Skips any files that are not currently visible (due to being filitered out by the search function).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Uncheck All Files</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="tags_management_layout">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>250</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Shape::Box</enum>
+         </property>
+         <property name="lineWidth">
+          <number>2</number>
+         </property>
+         <property name="midLineWidth">
+          <number>2</number>
+         </property>
+         <layout class="QVBoxLayout" name="internal_tags_management_layout">
+          <property name="spacing">
+           <number>8</number>
+          </property>
+          <property name="leftMargin">
+           <number>8</number>
+          </property>
+          <property name="topMargin">
+           <number>8</number>
+          </property>
+          <property name="rightMargin">
+           <number>8</number>
+          </property>
+          <property name="bottomMargin">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="tags_management_label">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Managing Tags</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="create_tag_button">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create a new tag. &lt;/p&gt;&lt;p&gt;It will not be assigned to any files at first, you can apply it to checked files later.&lt;/p&gt;&lt;p&gt;Tags with 0 attached files are not saved on disk.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Create New Tag</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="edit_tag_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit the currently selected (highlighted) tag's name.&lt;/p&gt;&lt;p&gt;It will be updated across all files that include it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Edit Selected Tag</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="delete_tag_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delete the currently selected (highlighted) tag.&lt;/p&gt;&lt;p&gt;It will also be removed from any files that include it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Delete Selected Tag</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="check_all_tags_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check the box for every currently existing tag.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Check All Tags</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="uncheck_all_tags_button">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Uncheck the box for every currently existing tag.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Uncheck All Tags</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item>
      <widget class="QFrame" name="files_layout">
       <property name="frameShape">
@@ -42,73 +350,6 @@
        <property name="bottomMargin">
         <number>8</number>
        </property>
-       <item>
-        <layout class="QHBoxLayout" name="add_files_layout">
-         <item>
-          <widget class="QPushButton" name="add_files_button">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose one or more files from your computer to add to the program's catalog. &lt;/p&gt;&lt;p&gt;They can later be tagged however you want.&lt;/p&gt;&lt;p&gt;The program does not check for duplicate file paths.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>Add Files</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="add_files_tags_checkbox">
-           <property name="maximumSize">
-            <size>
-             <width>130</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When this checkbox is set, the files you select to add to your list will be automatically initialized with all the tags that are currently checked on the tags list.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="layoutDirection">
-            <enum>Qt::LayoutDirection::LeftToRight</enum>
-           </property>
-           <property name="text">
-            <string>Apply Checked Tags</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="files_tagging_buttons_layout">
-         <item>
-          <widget class="QPushButton" name="add_tags_to_files_button">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add all currently checked tags to all currently checked files.&lt;/p&gt;&lt;p&gt;Duplicate tags will be skipped.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>Add Checked Tags To Checked Files</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="remove_tags_from_files_button">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove all currently checked tags from all currently checked files.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="text">
-            <string>Remove Checked Tags From Checked Files</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QPushButton" name="delete_file_button">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove the currently selected (highlighted) file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>Delete Selected File</string>
-         </property>
-        </widget>
-       </item>
        <item>
         <layout class="QHBoxLayout" name="searching_layout">
          <item>
@@ -149,6 +390,12 @@
        </item>
        <item>
         <widget class="QLabel" name="files_list_label">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The list below contains the files and all the tags they're associated with.&lt;/p&gt;&lt;p&gt;Double-click on a file to open it with matching software on your computer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -313,51 +560,18 @@
            <number>8</number>
           </property>
           <item>
-           <widget class="QPushButton" name="create_tag_button">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create a new tag. &lt;/p&gt;&lt;p&gt;It will not be assigned to any files at first, you can apply it to checked files later.&lt;/p&gt;&lt;p&gt;Tags with 0 attached files are not saved on disk.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Create New Tag</string>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="edit_tag_button">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit the currently selected (highlighted) tag's name.&lt;/p&gt;&lt;p&gt;It will be updated across all files that currently include it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Edit Selected Tag</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="delete_tag_button">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delete the currently selected (highlighted) tag.&lt;/p&gt;&lt;p&gt;It will also be removed from any files that currently include it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Delete Selected Tag</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QLabel" name="tags_list_label">
             <property name="minimumSize">
              <size>
               <width>0</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>11</pointsize>
+              <bold>true</bold>
+             </font>
             </property>
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The list below contains the tags that can be used to mark your files with.&lt;/p&gt;&lt;p&gt;The list keeps track of how many files are using a given tag.&lt;/p&gt;&lt;p&gt;Checking the boxes of tags affects other functionality, refer to respective tooltips to learn more.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -375,7 +589,7 @@
              <number>0</number>
             </property>
             <property name="text">
-             <string>Tag Name - Number Of Files</string>
+             <string>Tag Name - Files Count</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -441,65 +655,32 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1000</width>
+     <width>1200</width>
      <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
     <property name="title">
-     <string>File</string>
+     <string>Menu</string>
     </property>
     <addaction name="action_save"/>
     <addaction name="separator"/>
-    <addaction name="action_export_to_JSON"/>
-    <addaction name="action_import_from_JSON"/>
-    <addaction name="action_export_to_XML"/>
-    <addaction name="action_import_from_XML"/>
+    <addaction name="action_exit"/>
    </widget>
    <addaction name="menu_file"/>
   </widget>
   <widget class="QStatusBar" name="status_bar"/>
-  <action name="action_export_to_JSON">
-   <property name="text">
-    <string>Export to JSON</string>
-   </property>
-   <property name="iconText">
-    <string>Export to JSON</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
-  <action name="action_import_from_JSON">
-   <property name="text">
-    <string>Import from JSON</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
-  <action name="action_export_to_XML">
-   <property name="text">
-    <string>Export to XML</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
-  <action name="action_import_from_XML">
-   <property name="text">
-    <string>Import from XML</string>
-   </property>
-   <property name="iconVisibleInMenu">
-    <bool>true</bool>
-   </property>
-  </action>
   <action name="action_save">
    <property name="text">
     <string>Save</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>

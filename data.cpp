@@ -6,6 +6,7 @@
 
 QMap<QString, int>& Data::get_tags() noexcept
 {
+    saved = false;
     return m_tags;
 }
 
@@ -16,6 +17,7 @@ const QMap<QString, int>& Data::get_tags() const noexcept
 
 std::vector<File>& Data::get_files() noexcept
 {
+    saved = false;
     return m_files;
 }
 
@@ -24,12 +26,36 @@ const std::vector<File>& Data::get_files() const noexcept
     return m_files;
 }
 
-/*std::vector<size_t>& Data::get_viewed_files_indexes() noexcept
+bool Data::is_saved() const noexcept
 {
-    return m_viewed_files_indexes;
+    return saved;
 }
 
-const std::vector<size_t>& Data::get_viewed_files_indexes() const noexcept
+void Data::mark_as_saved() noexcept
 {
-    return m_viewed_files_indexes;
-}*/
+    saved = true;
+}
+
+QVariant Data::to_variant() const
+{
+    QVariantList list;
+
+    for (const auto& file : m_files)
+        list.append(file.to_variant());
+
+    return list;
+}
+
+void Data::from_variant(const QVariant& variant)
+{
+    m_tags.clear();
+    m_files.clear();
+
+    QVariantList list = variant.toList();
+
+    for (const QVariant& item : list)
+    {
+        m_files.emplace_back("", m_tags);
+        m_files.back().from_variant(item);
+    }
+}

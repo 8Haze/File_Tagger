@@ -9,15 +9,20 @@ CONFIG += c++20
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    binary_serializer.cpp \
     data.cpp \
     file.cpp \
     main.cpp \
-    main_window.cpp
+    main_window.cpp \
+    searcher.cpp
 
 HEADERS += \
+    binary_serializer.h \
     data.h \
     file.h \
-    main_window.h
+    main_window.h \
+    searcher.h \
+    serializable.h
 
 FORMS += \
     main_window.ui

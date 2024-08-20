@@ -1,13 +1,18 @@
 #ifndef FILE_H
 #define FILE_H
 
+#include <QObject>
 #include <QString>
 #include <QSet>
 #include <QMap>
 
-class File
+#include "serializable.h"
+
+class File : public QObject, public Serializable
 {
 private:
+
+    Q_OBJECT
 
     QString m_path;
     QSet<QString> m_tags;
@@ -19,9 +24,10 @@ public:
     File(const QString& path, QMap<QString, int>& tags_map);
     File(File&& other);
 
+    File(const File&) = delete;
+
     File& operator=(File&& other);
 
-    File(const File&) = delete;
     File& operator=(const File&) = delete;
 
     const QString& get_path() const noexcept;
@@ -35,8 +41,13 @@ public:
 
     QString to_string() const;
 
+    virtual QVariant to_variant() const override;
+    virtual void from_variant(const QVariant& variant) override;
+
     ~File() = default;
 
 };
+
+Q_DECLARE_METATYPE(File)
 
 #endif // FILE_H
