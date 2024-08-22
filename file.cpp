@@ -15,7 +15,9 @@ File::File(File&& other) :
     QObject(nullptr),
     m_path(std::move(other.m_path)),
     m_tags(std::move(other.m_tags)),
-    m_tags_map(other.m_tags_map) {}
+    m_tags_map(other.m_tags_map),
+    m_thumbnail(std::move(other.m_thumbnail)),
+    m_thumbnail_attempted(other.m_thumbnail_attempted) {}
 
 // ================================================================
 // | File Class - Assignment Operators                            |
@@ -25,6 +27,8 @@ File& File::operator=(File&& other)
 {
     m_path = std::move(other.m_path);
     m_tags = std::move(other.m_tags);
+    m_thumbnail = std::move(other.m_thumbnail);
+    m_thumbnail_attempted = other.m_thumbnail_attempted;
 
     return *this;
 }
@@ -103,8 +107,9 @@ void File::generate_thumbnail(const QSize& size)
 
     if (const auto& ext = file_info.suffix(); ext == "jpg" || ext == "png" || ext == "jpeg" || ext == "gif")
     {
-        QImage picture(m_path);
-        m_thumbnail = std::make_unique<QImage>(picture.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        QImage picture;
+        if (picture.load(m_path))
+            m_thumbnail = std::make_unique<QImage>(picture.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
 

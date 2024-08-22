@@ -278,6 +278,8 @@ void Main_Window::do_on_delete_file_button_clicked()
     delete ui->files_list->takeItem(row);
 
     refresh_ui_tags_list(false);
+
+    do_on_files_list_item_selection_changed();
 }
 
 void Main_Window::do_on_add_tags_to_files_button_clicked()
