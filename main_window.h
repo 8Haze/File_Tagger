@@ -39,7 +39,6 @@ private:
     QString tag_to_ui_string(const QString& tag_name, int count);
 
     void refresh_ui_tags_list(bool checked_only = false);
-
     void reset_search_results();
 
 private slots:
@@ -62,6 +61,7 @@ private slots:
     void do_on_search_button_clicked();
     void do_on_search_reset_button_clicked();
 
+    void do_on_files_list_item_selection_changed();
     void do_on_files_list_double_clicked(const QModelIndex& index);
 
     void do_on_action_save_triggered();
@@ -69,7 +69,8 @@ private slots:
 
 protected:
 
-    void closeEvent(QCloseEvent*) override;
+    void keyPressEvent(QKeyEvent* event) override;
+    void closeEvent(QCloseEvent* event) override;
 
 public:
 

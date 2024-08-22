@@ -1,5 +1,7 @@
 #include "file.h"
 
+#include <QFileInfo>
+
 // ================================================================
 // | File Class - Constructors                                    |
 // ================================================================
@@ -39,6 +41,11 @@ const QString& File::get_path() const noexcept
 const QSet<QString>& File::get_tags() const noexcept
 {
     return m_tags;
+}
+
+const std::unique_ptr<QImage>& File::get_thumbnail() const noexcept
+{
+    return m_thumbnail;
 }
 
 void File::set_path(const QString& path)
@@ -83,6 +90,22 @@ QString File::to_string() const
         result.chop(2);
 
     return result;
+}
+
+void File::generate_thumbnail(const QSize& size)
+{
+    if (m_thumbnail_attempted)
+        return;
+
+    m_thumbnail_attempted = true;
+
+    QFileInfo file_info(m_path);
+
+    if (const auto& ext = file_info.suffix(); ext == "jpg" || ext == "png" || ext == "jpeg" || ext == "gif")
+    {
+        QImage picture(m_path);
+        m_thumbnail = std::make_unique<QImage>(picture.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
 }
 
 QVariant File::to_variant() const

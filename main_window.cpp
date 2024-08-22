@@ -5,6 +5,7 @@
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QPixmap>
 #include <QDesktopServices>
 
 // ================================================================
@@ -45,6 +46,7 @@ void Main_Window::init_connections()
     connect(ui->search_button, &QPushButton::clicked, this, &Main_Window::do_on_search_button_clicked);
     connect(ui->search_reset_button, &QPushButton::clicked, this, &Main_Window::do_on_search_reset_button_clicked);
 
+    connect(ui->files_list, &QListWidget::itemSelectionChanged, this, &Main_Window::do_on_files_list_item_selection_changed);
     connect(ui->files_list, &QListWidget::doubleClicked, this, &Main_Window::do_on_files_list_double_clicked);
 
     connect(ui->action_save, &QAction::triggered, this, &Main_Window::do_on_action_save_triggered);
@@ -345,9 +347,31 @@ void Main_Window::do_on_search_reset_button_clicked()
     reset_search_results();
 }
 
+void Main_Window::do_on_files_list_item_selection_changed()
+{
+    if (!ui->files_list->currentItem() || ui->files_list->currentItem()->isHidden())
+    {
+        ui->thumbnail_label->setText("No Thumbnail Available");
+        return;
+    }
+
+    auto& files = m_data.get_files();
+    int row = ui->files_list->currentRow();
+
+    files[row].generate_thumbnail(ui->thumbnail_label->size());
+
+    if (files[row].get_thumbnail())
+    {
+        QPixmap pixmap = QPixmap::fromImage(*files[row].get_thumbnail());
+        ui->thumbnail_label->setPixmap(pixmap);
+    }
+    else
+        ui->thumbnail_label->setText("No Thumbnail Available");
+}
+
 void Main_Window::do_on_files_list_double_clicked(const QModelIndex& index)
 {
-    if (index.row() < 0 || index.row() >= ui->files_list->count())
+    if (index.row() < 0 || index.row() >= ui->files_list->count() || ui->files_list->item(index.row())->isHidden())
         return;
 
     if (!QDesktopServices::openUrl(QUrl("file:///" + m_data.get_files()[index.row()].get_path(), QUrl::TolerantMode)))
@@ -384,6 +408,19 @@ void Main_Window::do_on_action_exit_triggered()
 // ================================================================
 // | Main_Window Class - Protected                                |
 // ================================================================
+
+void Main_Window::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Return)
+    {
+        if (ui->files_list->hasFocus())
+            do_on_files_list_double_clicked(ui->files_list->currentIndex());
+        else if (ui->search_line->hasFocus())
+            do_on_search_button_clicked();
+    }
+
+    QMainWindow::keyPressEvent(event);
+}
 
 void Main_Window::closeEvent(QCloseEvent* event)
 {

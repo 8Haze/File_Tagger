@@ -7,8 +7,6 @@
 
 #include "file.h"
 
-// an option to quickly search for all untagged ones?
-
 class Searcher
 {
 private:

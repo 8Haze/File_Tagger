@@ -83,6 +83,15 @@ std::vector<int> Searcher::search(const std::vector<File>& files)
 {
     std::vector<int> to_hide;
 
+    if (included_tags.empty() && excluded_tags.empty())
+    {
+        for (size_t a = 0; a < files.size(); ++a)
+            if (!files[a].get_tags().empty())
+                to_hide.push_back(a);
+
+        return to_hide;
+    }
+
     for (size_t a = 0; a < files.size(); ++a)
     {
         bool skip_rest = false;

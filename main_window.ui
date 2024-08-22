@@ -495,7 +495,7 @@
          <item>
           <widget class="QLineEdit" name="search_line">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a list of tags that a file must have to be searched for, separating tags with spaces.&lt;/p&gt;&lt;p&gt;Precede a tag with a &amp;quot;-&amp;quot; to mark that it must not show up.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a list of tags that a file must have to be searched for, separating tags with spaces.&lt;/p&gt;&lt;p&gt;Precede a tag with a &amp;quot;-&amp;quot; to mark that it must not show up.&lt;/p&gt;&lt;p&gt;If you execute a search request with this line being empty, the program will list all files that do not currently have any tags applied to them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -616,6 +616,12 @@
           <item>
            <widget class="QLabel" name="thumbnail_label">
             <property name="minimumSize">
+             <size>
+              <width>190</width>
+              <height>190</height>
+             </size>
+            </property>
+            <property name="maximumSize">
              <size>
               <width>190</width>
               <height>190</height>

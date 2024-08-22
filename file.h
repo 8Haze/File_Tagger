@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QImage>
 #include <QSet>
 #include <QMap>
 
@@ -17,7 +18,9 @@ private:
     QString m_path;
     QSet<QString> m_tags;
     QMap<QString, int>& m_tags_map;
-    //std::unique_ptr<QImage> m_thumbnail; // optional
+
+    std::unique_ptr<QImage> m_thumbnail = nullptr;
+    bool m_thumbnail_attempted = false;
 
 public:
 
@@ -32,6 +35,7 @@ public:
 
     const QString& get_path() const noexcept;
     const QSet<QString>& get_tags() const noexcept;
+    const std::unique_ptr<QImage>& get_thumbnail() const noexcept;
 
     void set_path(const QString& path);
 
@@ -40,6 +44,8 @@ public:
     void remove_tag(const QString& tag);
 
     QString to_string() const;
+
+    void generate_thumbnail(const QSize& size);
 
     virtual QVariant to_variant() const override;
     virtual void from_variant(const QVariant& variant) override;
