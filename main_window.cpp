@@ -49,6 +49,9 @@ void Main_Window::init_connections()
     connect(ui->files_list, &QListWidget::itemSelectionChanged, this, &Main_Window::do_on_files_list_item_selection_changed);
     connect(ui->files_list, &QListWidget::doubleClicked, this, &Main_Window::do_on_files_list_double_clicked);
 
+    connect(ui->tags_list, &QListWidget::itemChanged, this, &Main_Window::do_on_list_item_changed);
+    connect(ui->files_list, &QListWidget::itemChanged, this, &Main_Window::do_on_list_item_changed);
+
     connect(ui->action_save, &QAction::triggered, this, &Main_Window::do_on_action_save_triggered);
     connect(ui->action_exit, &QAction::triggered, this, &Main_Window::do_on_action_exit_triggered);
 }
@@ -133,6 +136,17 @@ QString Main_Window::tag_to_ui_string(const QString& tag_name, int count)
     return result;
 }
 
+void Main_Window::rewrite_ui_tags_list()
+{
+    ui->tags_list->clear();
+
+    for (const auto& [tag_name, count] : m_data.get_tags().asKeyValueRange())
+    {
+        ui->tags_list->addItem(tag_to_ui_string(tag_name, count));
+        ui->tags_list->item(ui->tags_list->count() - 1)->setCheckState(Qt::Unchecked);
+    }
+}
+
 void Main_Window::refresh_ui_tags_list(bool checked_only)
 {
     for (int a = 0; a < ui->tags_list->count(); ++a)
@@ -164,8 +178,7 @@ void Main_Window::do_on_create_tag_button_clicked()
 
     m_data.get_tags().insert(tag_name, 0);
 
-    ui->tags_list->addItem(tag_to_ui_string(tag_name, 0));
-    ui->tags_list->item(ui->tags_list->count() - 1)->setCheckState(Qt::Unchecked);
+    rewrite_ui_tags_list();
 }
 
 void Main_Window::do_on_edit_tag_button_clicked()
@@ -183,7 +196,7 @@ void Main_Window::do_on_edit_tag_button_clicked()
     m_data.get_tags().remove(old_name);
     m_data.get_tags().insert(new_name, count);
 
-    ui->tags_list->currentItem()->setText(new_name + " - " + QString::number(count));
+    rewrite_ui_tags_list();
 
     auto& files = m_data.get_files();
 
@@ -378,6 +391,16 @@ void Main_Window::do_on_files_list_double_clicked(const QModelIndex& index)
 
     if (!QDesktopServices::openUrl(QUrl("file:///" + m_data.get_files()[index.row()].get_path(), QUrl::TolerantMode)))
         QMessageBox::critical(this, "File could not be opened", "The file could not be opened. If it does not exist anymore, it should be removed from the program.");
+}
+
+void Main_Window::do_on_list_item_changed(QListWidgetItem* item)
+{
+    if (item)
+    {
+        QFont font = item->font();
+        font.setBold(item->checkState() == Qt::Checked);
+        item->setFont(font);
+    }
 }
 
 void Main_Window::do_on_action_save_triggered()

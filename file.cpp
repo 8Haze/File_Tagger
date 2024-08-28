@@ -105,7 +105,7 @@ void File::generate_thumbnail(const QSize& size)
 
     QFileInfo file_info(m_path);
 
-    if (const auto& ext = file_info.suffix(); ext == "jpg" || ext == "png" || ext == "jpeg" || ext == "gif")
+    if (const auto& ext = file_info.suffix(); ext == "jpg" || ext == "png" || ext == "jpeg" || ext == "gif" || ext == "jfif")
     {
         QImage picture;
         if (picture.load(m_path))

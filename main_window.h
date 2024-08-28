@@ -38,7 +38,8 @@ private:
     QString extract_tag_name(QString string);
     QString tag_to_ui_string(const QString& tag_name, int count);
 
-    void refresh_ui_tags_list(bool checked_only = false);
+    void rewrite_ui_tags_list();                            // To ensure alphabetical order
+    void refresh_ui_tags_list(bool checked_only = false);   // When the alphabetical order is not at risk
     void reset_search_results();
 
 private slots:
@@ -63,6 +64,8 @@ private slots:
 
     void do_on_files_list_item_selection_changed();
     void do_on_files_list_double_clicked(const QModelIndex& index);
+
+    void do_on_list_item_changed(QListWidgetItem* item);
 
     void do_on_action_save_triggered();
     void do_on_action_exit_triggered();
